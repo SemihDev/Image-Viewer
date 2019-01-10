@@ -1,4 +1,4 @@
-package imageViewer;
+package display;
 
 import java.awt.Color;
 import java.awt.Graphics;
@@ -6,25 +6,56 @@ import java.awt.Point;
 
 import javax.swing.JPanel;
 
-import imageViewer.Var;
+import static display.Window.window;
 
 @SuppressWarnings("serial")
 public class RenderPanel extends JPanel {
 	
-	public static Color white = new Color(16777215);
+	public boolean finished = false;
 	
 	protected void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		
-		Var var = Var.var;
-		g.setColor(white);
-		g.fillRect(var.imageX, var.imageY, var.screenWidth, var.screenHeigth);
-		
-		g.setColor(var.brushColor);
-		g.fillRect(var.brush.x - 5, var.brush.y - 63, Var.SCALE, Var.SCALE);
-		
-		for (Point point : var.brushParts) {
-			g.fillRect(point.x - 5, point.y - 63, Var.SCALE, Var.SCALE);
+		if (window.rgbPaint != null)  {
+			g.drawImage(window.rgbPaint, 0, 0, this);
+			
+			if (window.openFile) {
+				window.jframe.setSize(window.rgbPaint.getWidth(), window.rgbPaint.getHeight() + 63);
+				window.openFile = false;
+			}
 		}
+		else {
+			g.setColor(Color.WHITE);
+			g.fillRect(0, 0, window.x, window.y);
+		}
+		
+		if (window.color == Window.BLACK) {
+			g.setColor(Color.BLACK);
+		}
+		else if (window.color == Window.RED) {
+			g.setColor(Color.RED);
+		}
+		else if (window.color == Window.GREEN) {
+			g.setColor(Color.GREEN);
+		}
+		else if (window.color == Window.BLUE)  {
+			g.setColor(Color.BLUE);
+		}
+		else if (window.color == Window.YELLOW) {
+			g.setColor(Color.YELLOW);
+		}
+		else if (window.color == Window.CYAN) {
+			g.setColor(Color.CYAN);
+		}
+		else {
+			g.setColor(Color.WHITE);
+		}
+		g.fillRect(window.brush.x, window.brush.y, window.size, window.size);
+		
+		for (Point point : window.brushParts) {
+			g.fillRect(point.x, point.y, window.size, window.size);
+		}
+		
+		finished = true;
 	}
 }
